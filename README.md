@@ -11,6 +11,65 @@ checks, and writes a report (JSON, text, and a CSV manifest) with a
 pass/review verdict and a per-check confidence score, for a human to read
 alongside the slide.
 
+## What this tool catches — and what it does not
+
+This is the section to read before deciding how much to trust a result. All
+examples use fake case identifiers (`SK26-...`) — never a real case ID.
+
+### Catches (reliably)
+
+- **Label/metadata mismatch.** It reads the barcode off the slide's label
+  image (via `zxing-cpp`, falling back to OCR via `easyocr`) and compares it
+  to the **expected** case identity supplied in the `.qc.json` sidecar. If
+  the label disagrees with the record — e.g. a mis-scanned or swapped label
+  whose barcode no longer matches the expected case/partset — it flags it.
+  This check is strongest when the sidecar is populated from the LIS; see
+  [LIS / IMS integration](#lis--ims-integration) below for what happens when
+  it isn't.
+- **Repeated / frozen labels (buffer-freeze).** If the scanner stamps the
+  same label image onto consecutive slides, this check compares each label's
+  perceptual hash to the previous slide processed and flags near-identical
+  labels that carry *different* expected identities. It's case/partset/stain
+  aware, so legitimate same-case siblings (e.g. `SK26-493035_A_HE` next to
+  `SK26-493035_B_HE`) and different-stain slides of the same block (e.g.
+  `SK26-493035_A_HE` next to `SK26-493035_A_ABPAS`) do not false-flag.
+- **Coarse coverage/edge signals.** Approximate tissue-coverage and
+  edge-clipping indicators — see "Approximate / advisory" below. Useful as a
+  rough signal, advisory only.
+
+### Does not catch (important limitation — read this plainly)
+
+This tool compares **identifiers** to each other — the label's barcode/OCR
+text against the case metadata on record. It never verifies the label
+against the actual **tissue**. It has no way to recognize what specimen is
+on the glass; it only ever checks whether the things that *claim* to
+identify the slide agree with each other.
+
+The consequence: the specific failure mode where a scanner glitch pairs the
+**wrong label** with the **wrong macro/tissue image** is caught **only if**
+the mis-paired label ends up inconsistent with that slide's own metadata.
+If the label *and* the metadata are wrong but **mutually consistent** — for
+example, a slide physically carrying case `SK26-493036`'s tissue is scanned
+with case `SK26-493035`'s label, and the `.qc.json` sidecar for that file
+*also* says `SK26-493035` (the record traveled with the wrong label instead
+of with the tissue) — the tool will **PASS** it. Both identifiers agree with
+each other; neither one is checked against the physical tissue. Closing this
+gap requires an independent source of truth (LIS-confirmed specimen
+attributes obtained some way other than the label itself) and/or
+image-level tissue verification — neither of which this tool does today. See
+[Roadmap / known gaps](#roadmap--known-gaps).
+
+### Approximate / advisory
+
+- **Tissue coverage** is an unregistered area-proportion estimate: it
+  compares how much tissue-like area the scan has versus the macro glass,
+  with no image registration, and cannot localize what's missing. Its
+  confidence is capped and it never hard-fails — a `REVIEW` from this check
+  means "eyeball it," not "confirmed omission." Precise, registered coverage
+  is planned for a future version.
+- **Scan-area check is currently a stub.** It always passes and verifies
+  nothing yet.
+
 ## Checks
 
 | Check | Failure mode | Status |
@@ -117,10 +176,10 @@ system of record, with no manual step in between.
 ### Fallback and limits — read this before trusting a result
 
 - **No sidecar, or a blank field:** the check falls back to comparing the
-  read barcode/OCR text against the **filename**. This is a much weaker
-  sanity check — it confirms the label matches the file it was saved as, not
-  that it matches the system of record. Treat a pass under this fallback as
-  "internally consistent," not "verified against the LIS."
+  read barcode/OCR text against the **filename**. This is a weak sanity
+  check, not system-of-record verification — it confirms the label matches
+  the file it was saved as, not that it matches the LIS. Treat a pass under
+  this fallback as "internally consistent," not "verified against the LIS."
 - **The honest boundary:** if the label barcode, the `.qc.json` sidecar, and
   the filename all ultimately derive from the same upstream source (e.g. the
   same accessioning step generated all three), they can all agree with each
@@ -233,6 +292,23 @@ slide," not "tissue omission confirmed."
   and even a fully populated sidecar cannot catch an error that was already
   baked into the label, sidecar, and filename upstream of this tool.
 - **Scan-area check is a stub** — it always passes and verifies nothing yet.
+
+## Roadmap / known gaps
+
+Listed in order of what would most improve trust in this tool, most
+important first:
+
+1. **LIS-truth cross-check + tissue-level verification**, to close the gap
+   described in [What this tool catches — and what it does not](#what-this-tool-catches--and-what-it-does-not):
+   today, a label and its sidecar can agree with each other and still both
+   be wrong for the physical tissue, and nothing in this tool would catch
+   that. Closing it needs a source of truth that doesn't travel with the
+   slide/label itself, plus some form of image-level tissue verification.
+2. **Registered tissue coverage** — replace the current unregistered,
+   proportion-only estimate with a real registration between the macro and
+   scan so coverage gaps can be localized, not just estimated in aggregate.
+3. **Scan-area check implementation** — currently a stub; implement the
+   actual bounding-box comparison against a pre-scan scan-area annotation.
 
 ## Disclaimer
 
