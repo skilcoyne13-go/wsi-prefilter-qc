@@ -1,0 +1,10 @@
+{
+  "inbox": "data/inbox",
+  "reports": "data/reports",
+  "done": "data/done",
+  "failed": "data/failed",
+  "extensions": [".svs", ".tif", ".tiff", ".ndpi", ".mrxs"],
+  "outputs": ["json", "text", "csv"],
+  "move_processed": false,
+  "watch_interval_seconds": 10
+}

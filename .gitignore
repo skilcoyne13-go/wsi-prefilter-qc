@@ -1,0 +1,27 @@
+# Environments
+.venv/
+__pycache__/
+*.pyc
+
+# Local editor/tool config
+.claude/
+
+# Slide files - large and often contain PHI, never commit
+*.svs
+*.tif
+*.tiff
+*.ndpi
+*.mrxs
+
+# Per-slide QC metadata sidecars (may reference case/patient identifiers)
+*.qc.json
+
+# Runtime data folders - contents only, keep the folders themselves
+data/inbox/*
+data/done/*
+data/failed/*
+data/reports/*
+
+# Local tuning/debug output
+tune_*.png
+raw_*.png

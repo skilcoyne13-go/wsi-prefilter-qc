@@ -1,0 +1,11 @@
+numpy
+pillow
+opencv-python
+openslide-python
+openslide-bin
+zxing-cpp
+
+# Optional: enables OCR fallback for the macro/label match check when the
+# 2D barcode can't be decoded. Pulls in torch (large download). Uncomment
+# to enable:
+# easyocr
