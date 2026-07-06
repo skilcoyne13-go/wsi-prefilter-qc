@@ -13,9 +13,6 @@ alongside the slide.
 
 ## What this tool catches — and what it does not
 
-This is the section to read before deciding how much to trust a result. All
-examples use fake case identifiers (`SK26-...`) — never a real case ID.
-
 ### Catches (reliably)
 
 - **Label/metadata mismatch.** It reads the barcode off the slide's label
@@ -37,7 +34,7 @@ examples use fake case identifiers (`SK26-...`) — never a real case ID.
   edge-clipping indicators — see "Approximate / advisory" below. Useful as a
   rough signal, advisory only.
 
-### Does not catch (important limitation — read this plainly)
+### Does not catch (important limitation)
 
 This tool compares **identifiers** to each other — the label's barcode/OCR
 text against the case metadata on record. It never verifies the label
