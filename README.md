@@ -18,7 +18,7 @@ alongside the slide.
 - **Label/metadata mismatch.** It reads the barcode off the slide's label
   image (via `zxing-cpp`, falling back to OCR via `easyocr`) and compares it
   to the **expected** case identity supplied in the `.qc.json` sidecar. If
-  the label disagrees with the record — e.g. a mis-scanned or swapped label
+  the label disagrees with the record - e.g. a mis-scanned or swapped label
   whose barcode no longer matches the expected case/partset — it flags it.
   This check is strongest when the sidecar is populated from the LIS; see
   [LIS / IMS integration](#lis--ims-integration) below for what happens when
@@ -49,11 +49,11 @@ If the label *and* the metadata are wrong but **mutually consistent** — for
 example, a slide physically carrying case `SK26-493036`'s tissue is scanned
 with case `SK26-493035`'s label, and the `.qc.json` sidecar for that file
 *also* says `SK26-493035` (the record traveled with the wrong label instead
-of with the tissue) — the tool will **PASS** it. Both identifiers agree with
+of with the tissue) - the tool will **PASS** it. Both identifiers agree with
 each other; neither one is checked against the physical tissue. Closing this
 gap requires an independent source of truth (LIS-confirmed specimen
 attributes obtained some way other than the label itself) and/or
-image-level tissue verification — neither of which this tool does today. See
+image-level tissue verification - neither of which this tool does today. See
 [Roadmap / known gaps](#roadmap--known-gaps).
 
 ### Approximate / advisory
@@ -61,7 +61,7 @@ image-level tissue verification — neither of which this tool does today. See
 - **Tissue coverage** is an unregistered area-proportion estimate: it
   compares how much tissue-like area the scan has versus the macro glass,
   with no image registration, and cannot localize what's missing. Its
-  confidence is capped and it never hard-fails — a `REVIEW` from this check
+  confidence is capped and it never hard-fails - a `REVIEW` from this check
   means "eyeball it," not "confirmed omission." Precise, registered coverage
   is planned for a future version.
 - **Scan-area check is currently a stub.** It always passes and verifies
@@ -274,7 +274,7 @@ apart from a genuine duplicate.
 **Tissue coverage (tissue finder).** This check is explicitly
 **approximate**: it compares the *proportion* of tissue in the scan against
 the macro glass, with no image registration, so it can't say *where* tissue
-is missing — only that the scan looks like it has noticeably less tissue
+is missing - only that the scan looks like it has noticeably less tissue
 than the glass did. Its confidence is capped and it is designed to **never
 hard-fail** (worst case is a `WARNING`, never `CRITICAL`/`ERROR`). A
 `REVIEW` from this check specifically means "a human should eyeball this
@@ -301,7 +301,7 @@ important first:
    be wrong for the physical tissue, and nothing in this tool would catch
    that. Closing it needs a source of truth that doesn't travel with the
    slide/label itself, plus some form of image-level tissue verification.
-2. **Registered tissue coverage** — replace the current unregistered,
+2. **Registered tissue coverage** - replace the current unregistered,
    proportion-only estimate with a real registration between the macro and
    scan so coverage gaps can be localized, not just estimated in aggregate.
 3. **Scan-area check implementation** — currently a stub; implement the
