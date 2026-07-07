@@ -3,18 +3,17 @@
 A step-by-step way to prove this tool works on **your** scanners,
 naming conventions, and stain set before trusting it on real cases. Every
 example below uses the fake case identifier `SK26-493035` (and
-siblings like `SK26-493036`) — never substitute a real case ID when following
+siblings like `SK26-493036`) - never substitute a real case ID when following
 along; use whatever synthetic identifiers make sense for a dry run, and only
 move to real slides in Layer 2 once Layer 1 passes.
 
-Work through the layers in order — each is cheaper and faster than the next,
+Work through the layers in order - each is cheaper and faster than the next,
 and each builds confidence for the one after it.
 
 ## Layer 1 — No slides needed (install sanity check)
 
 This layer only proves the code and install are sound. It uses synthetic
-data, not your scanners, so a pass here is necessary but not sufficient —
-don't stop here.
+data, not your scanners.
 
 ```bash
 python -m unittest discover -s tests
@@ -42,10 +41,10 @@ Expect six lines, one per synthetic slide, in this pattern:
 | `slide_F.svs` | visibly distinct label from E | `PASS` (info) — no duplication detected |
 
 If both of these pass with the expected outcomes above, the check logic and
-your install are sound. That's Layer 1 done — it does **not** yet tell you
+your install are sound. That's Layer 1 done - it does **not** yet tell you
 anything about your actual scanners or slides.
 
-## Layer 2 — Small real batch (works on your scanners)
+## Layer 2 - Small real batch (works on your scanners)
 
 Now point the tool at a small batch of your own slides.
 
@@ -67,7 +66,7 @@ python make_sidecars.py data/inbox
 python process.py
 ```
 
-Open `data/reports/manifest.csv`. The two columns that matter most:
+Open `data/reports/manifest.csv`. The two columns:
 
 - **`qc_passed`** — `True` only if no check raised a blocking (`CRITICAL` or
   `ERROR`) finding for that slide. This is the same value shown as `PASS` in
@@ -80,14 +79,13 @@ Open `data/reports/manifest.csv`. The two columns that matter most:
   — read `findings_summary` either way.
 
 If this batch runs cleanly and the verdicts look sane for slides you already
-know the ground truth on, Layer 2 is done. This still isn't proof the tool
-*catches* anything on your data — only that it runs without errors and
-produces plausible-looking output. That's what Layer 3 is for.
+know the ground truth on, Layer 2 is done. This is proof that it runs without errors and
+produces plausible-looking output.
 
-## Layer 3 — Deliberately prove each check catches something (the important part)
+## Layer 3 — Prove each check catches something (the important part)
 
 A tool that only ever passes is indistinguishable from one that does
-nothing. This layer is what actually proves the checks work on your data —
+nothing. This layer is what proves the checks work on your data -
 by watching each one catch a problem you deliberately introduced, not just
 by watching it stay quiet.
 
@@ -103,33 +101,31 @@ synthetic images.
 
 **Duplicate label (buffer-freeze).** If your batch includes two stains of
 one specimen (e.g. HE and ABPAS of the same case/partset), confirm they do
-**not** false-flag as a duplicate — same case/partset with a different stain
+**not** false-flag as a duplicate - same case/partset with a different stain
 should come back `PASS`, even if the label images look visually similar.
 Remember this check only compares each slide against the **immediately
-preceding slide processed in the same run** — it has no memory across
+preceding slide processed in the same run** - it has no memory across
 separate runs of `process.py` and does not look further back than one slide.
 A real buffer-freeze looks like: same case, same partset, same stain, and a
 near-identical label image, on two consecutive slides in the same run —
 that combination should raise `CRITICAL` under `DUPLICATE_MACRO_LABEL`.
 
-**Tissue coverage (tissue finder).** State this plainly to yourself before
-reading any result: this check is **approximate** — it compares the
+**Tissue coverage (tissue finder).** This check is **approximate** - it compares the
 *proportion* of tissue in the scan against the macro glass, with no image
 registration, so it cannot say *where* tissue is missing, only that the scan
 looks like it has noticeably less tissue than the glass did. Its confidence
 is capped and it is designed to **never hard-fail** (worst case is a
 `WARNING`, never `CRITICAL`/`ERROR`). A `REVIEW` from this check specifically
 means "a human should eyeball this slide," not "tissue omission confirmed."
-Don't try to force a hard-fail out of it — that's not what it's for.
 
-## Known limitations / calibrate your trust
+## Known limitations
 
-- **Tissue coverage is approximate**, pending a registered v2 — it flags
+- **Tissue coverage is approximate**, pending a registered v2 - it flags
   gross shortfalls, not precise omissions, and never hard-fails on its own.
 - **Label verification is only as strong as the sidecar data.** An empty or
   missing `.qc.json` makes the label check fall back to comparing against
   the **filename**, which is a weak sanity check ("internally consistent"),
   not verification against the system of record.
-- **Scan-area check is a stub** — it always passes and verifies nothing yet.
+- **Scan-area check is a stub** - it always passes and verifies nothing yet.
 - A tool that only ever passes is indistinguishable from one that does
-  nothing — **Layer 3 is what proves it actually catches**. Don't skip it.
+  nothing — **Layer 3 is what proves it actually catches**.
