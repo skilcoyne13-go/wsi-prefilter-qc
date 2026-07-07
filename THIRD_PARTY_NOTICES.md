@@ -1,7 +1,7 @@
 # Third-Party Notices
 
 This project depends on the following third-party packages, none of which
-are vendored or modified — they are installed from PyPI per
+are vendored or modified - they are installed from PyPI per
 `requirements.txt`. This file is informational, not legal advice; consult
 your own counsel if you need a license determination.
 
