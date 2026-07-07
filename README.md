@@ -11,7 +11,7 @@ checks, and writes a report (JSON, text, and a CSV manifest) with a
 pass/review verdict and a per-check confidence score, for a human to read
 alongside the slide.
 
-## What this tool catches — and what it does not
+## What this tool catches - and what it does not
 
 ### Catches (reliably)
 
