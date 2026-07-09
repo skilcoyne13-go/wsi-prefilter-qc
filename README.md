@@ -19,7 +19,7 @@ alongside the slide.
   image (via `zxing-cpp`, falling back to OCR via `easyocr`) and compares it
   to the **expected** case identity supplied in the `.qc.json` sidecar. If
   the label disagrees with the record - e.g. a mis-scanned or swapped label
-  whose barcode no longer matches the expected case/partset — it flags it.
+  whose barcode no longer matches the expected case/partset - it flags it.
   This check is strongest when the sidecar is populated from the LIS; see
   [LIS / IMS integration](#lis--ims-integration) below for what happens when
   it isn't.
@@ -31,7 +31,7 @@ alongside the slide.
   `SK26-493035_B_HE`) and different-stain slides of the same block (e.g.
   `SK26-493035_A_HE` next to `SK26-493035_A_ABPAS`) do not false-flag.
 - **Coarse coverage/edge signals.** Approximate tissue-coverage and
-  edge-clipping indicators — see "Approximate / advisory" below. Useful as a
+  edge-clipping indicators - see "Approximate / advisory" below. Useful as a
   rough signal, advisory only.
 
 ### Does not catch (important limitation)
