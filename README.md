@@ -45,7 +45,7 @@ identify the slide agree with each other.
 The consequence: the specific failure mode where a scanner glitch pairs the
 **wrong label** with the **wrong macro/tissue image** is caught **only if**
 the mis-paired label ends up inconsistent with that slide's own metadata.
-If the label *and* the metadata are wrong but **mutually consistent** — for
+If the label *and* the metadata are wrong but **mutually consistent** - for
 example, a slide physically carrying case `SK26-493036`'s tissue is scanned
 with case `SK26-493035`'s label, and the `.qc.json` sidecar for that file
 *also* says `SK26-493035` (the record traveled with the wrong label instead
@@ -263,12 +263,12 @@ Correct the value back and confirm the same slide now `PASS`es that check.
 **Duplicate label (buffer-freeze).** This check only compares each slide
 against the **immediately preceding slide processed in the same run** — it
 has no memory across separate runs of `process.py`, and it does not
-reorder or look further back. A real freeze — same case, same partset, same
-stain, and a near-identical label image, back to back — should raise
+reorder or look further back. A real freeze - same case, same partset, same
+stain, and a near-identical label image, back to back - should raise
 `CRITICAL` under `DUPLICATE_MACRO_LABEL`. Two adjacent blocks of the same
 case (same case, different partset) or two different stains of the same
 block (same case/partset, different stain) with similar-looking labels
-should both come back `PASS` — that's the check correctly telling those
+should both come back `PASS` - that's the check correctly telling those
 apart from a genuine duplicate.
 
 **Tissue coverage (tissue finder).** This check is explicitly
