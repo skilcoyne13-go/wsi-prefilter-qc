@@ -10,7 +10,7 @@ move to real slides in Layer 2 once Layer 1 passes.
 Work through the layers in order - each is cheaper and faster than the next,
 and each builds confidence for the one after it.
 
-## Layer 1 — No slides needed (install sanity check)
+## Layer 1 - No slides needed (install sanity check)
 
 This layer only proves the code and install are sound. It uses synthetic
 data, not your scanners.
@@ -82,7 +82,7 @@ If this batch runs cleanly and the verdicts look sane for slides you already
 know the ground truth on, Layer 2 is done. This is proof that it runs without errors and
 produces plausible-looking output.
 
-## Layer 3 — Prove each check catches something (the important part)
+## Layer 3 - Prove each check catches something (the important part)
 
 A tool that only ever passes is indistinguishable from one that does
 nothing. This layer is what proves the checks work on your data -
