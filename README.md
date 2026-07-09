@@ -74,7 +74,7 @@ image-level tissue verification - neither of which this tool does today. See
 | Macro/label match | Barcode/OCR text on the label doesn't match the expected case/patient metadata (possible label swap) | Implemented |
 | Duplicate label | Label is near-identical to the previous slide processed (scanner "buffer freeze") | Implemented |
 | Tissue clipping | Tissue fragment touches the scanned region's edge (tissue-finder box may have clipped it) | Implemented |
-| Tissue coverage | Scan has noticeably less tissue than the macro glass shows | Implemented, **approximate** — compares tissue proportion only (no image registration), so it can't localize what's missing and never hard-fails. A precise, registered version is pending v2. |
+| Tissue coverage | Scan has noticeably less tissue than the macro glass shows | Implemented, **approximate** - compares tissue proportion only (no image registration), so it can't localize what's missing and never hard-fails. A precise, registered version is pending v2. |
 | Scan area | Digitized region matches a pre-scan bounding box | Stub — always passes, not implemented |
 
 The macro/label check is deterministic-first: it reads the 2D barcode
@@ -138,9 +138,9 @@ optional — leave unknown ones blank/null:
 }
 ```
 
-- `case_id` / `patient_id` / `barcode_string` — expected identity values from
+- `case_id` / `patient_id` / `barcode_string` - expected identity values from
   the LIS/IMS, checked against what's actually read off the slide's label.
-- `expected_fragment_count` — currently unused by any check.
+- `expected_fragment_count` - currently unused by any check.
 
 `make_sidecars.py` will generate blank templates for every slide in
 `data/inbox/` (or folders passed as arguments) that doesn't already have one.
@@ -245,7 +245,7 @@ Open `data/reports/manifest.csv`. The two columns to focus on:
   `.qcreport.txt`; anything else is `REVIEW`.
 - `findings_summary` — every check that didn't pass, including non-blocking
   `WARNING`s, pipe-separated. A slide can show up as `PASS` and still have
-  entries here (e.g. a `WARNING`-level approximate tissue-coverage flag) — a
+  entries here (e.g. a `WARNING`-level approximate tissue-coverage flag) - a
   `REVIEW` verdict always means at least one blocking finding, but a `PASS`
   doesn't mean every check came back clean.
 
@@ -288,7 +288,7 @@ slide," not "tissue omission confirmed."
   `.qc.json`, the label check falls back to a weaker filename comparison,
   and even a fully populated sidecar cannot catch an error that was already
   baked into the label, sidecar, and filename upstream of this tool.
-- **Scan-area check is a stub** — it always passes and verifies nothing yet.
+- **Scan-area check is a stub** - it always passes and verifies nothing yet.
 
 ## Roadmap / known gaps
 
@@ -304,7 +304,7 @@ important first:
 2. **Registered tissue coverage** - replace the current unregistered,
    proportion-only estimate with a real registration between the macro and
    scan so coverage gaps can be localized, not just estimated in aggregate.
-3. **Scan-area check implementation** — currently a stub; implement the
+3. **Scan-area check implementation** - currently a stub; implement the
    actual bounding-box comparison against a pre-scan scan-area annotation.
 
 ## Disclaimer
