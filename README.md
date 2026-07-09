@@ -36,7 +36,7 @@ alongside the slide.
 
 ### Does not catch (important limitation)
 
-This tool compares **identifiers** to each other — the label's barcode/OCR
+This tool compares **identifiers** to each other - the label's barcode/OCR
 text against the case metadata on record. It never verifies the label
 against the actual **tissue**. It has no way to recognize what specimen is
 on the glass; it only ever checks whether the things that *claim* to
